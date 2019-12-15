@@ -8,6 +8,7 @@ const expressValidator = require('express-validator');
 const cookieParser = require('cookie-parser');
 const cors = require('cors');
 const fs = require('fs');
+const path = require('path');
 dotenv.config();
 
 
@@ -48,7 +49,13 @@ app.use(function(err,req,res,next){
         })
     }
 })
+if(process.env.NODE_ENV === 'production'){
+    app.use(express.static('client/build'));
 
+    app.get('*',(req,res)=>{
+        res.sendFile(path.resolve(__dirname,'client','build','index.html'));
+    })
+}
 const port = process.env.PORT || 8080;
 app.listen(port,()=>{
     console.log(`A node.js Api listen toport${port}`)
